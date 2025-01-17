@@ -9,209 +9,160 @@
 <body class="bg-gray-100 text-gray-900">
   <header class="bg-blue-600 text-white py-8">
     <div class="container mx-auto px-4">
-      <h1 class="text-3xl font-bold">和田一真(ワダカズマ)のプロフィール</h1>
+      <h1 class="text-3xl font-bold">和田一真(ワダカズマ)のポートフォリオ</h1>
       <p class="text-lg">26歳 / Webエンジニアの仕事を探しています。(Ruby on Rails, JavaScript, Node.jsを使用してアプリをリリースした経験があります。)</p>
     </div>
   </header>
 
-  <main class="container mx-auto px-4 py-8">
+    <!-- 目次 -->
+    <nav class="bg-white shadow-md sticky top-0 z-50">
+        <div class="container mx-auto px-4 py-2">
+          <ul class="flex space-x-4 text-blue-600">
+            <li><a href="#app-i-build" class="hover:underline">🧑‍💻作ったWebサイト</a></li>
+            <li><a href="#profile" class="hover:underline">🧍🏻‍♂️プロフィール</a></li>
+            <li><a href="#oversea" class="hover:underline">✈️なぜ海外に3年住んでいたのか</a></li>
+            <li><a href="#how-i-learn-code" class="hover:underline">📖これまでどんな学習をしてきたか</a></li>
+            <li><a href="#plz" class="hover:underline">🙇‍♂️Webエンジニアとして働きたいです。</a></li>
+            <li><a href="#lastly" class="hover:underline">💬終わりに</a></li>
+          </ul>
+        </div>
+      </nav>
+      
+    
+
+    <main class="container mx-auto px-4 py-8" id="app-i-build">
+        <section class="mb-8">
+          <h2 class="text-2xl font-semibold mb-4">🧑‍💻作ったWebサイト</h2>
+      <div class="grid grid-cols-1 gap-6 m-5"><!--ポートフォリオカード-->
+        <!-- EigoPencil Card -->
+        <div class="bg-white shadow-md rounded-lg p-6">
+           <h4 class="text-lg font-semibold mb-2 flex items-center">
+             ✏️ <a href="http://eigopencil.com" class="text-blue-500 underline ml-2">eigopencil.com</a>
+           </h4>
+           <p class="text-sm text-gray-700 mb-4">
+             <strong>使用技術:</strong>
+             <br>フロントエンド: HTML/CSS/Tailwind CSS
+             <br>バックエンド: Ruby on Rails
+             <br>データベース: PostgreSQL
+             <br>インフラ: Docker
+             <br>デプロイ: Render
+             <br>レポジトリ: <a href="https://github.com/KazumaWada/eigopencil" class="text-blue-500 underline">GitHub</a>
+           </p>
+           <p class="text-sm text-gray-700 mb-4">
+             <strong>技術記事:</strong>
+             <a href="https://zenn.dev/kazumawada/articles/3ffb67eb690290" class="text-blue-500 underline">英語学習サイト ✏️eigopencil.com をリリースしました。</a>
+           </p>
+           <p class="text-sm text-gray-700">
+             前回の反省を踏まえ、継続的にメンテナンスやアップデートが可能な英語学習サイトを開発しました。英語を書いてアウトプットする環境を提供するアプリで、帰国後の英語力維持を目的にしています。他のユーザーもサインアップして利用できます。
+           </p>
+         </div>
+
+             <!-- TravelPackHub Card -->
+             <div class="bg-white shadow-md rounded-lg p-6">
+               <h4 class="text-lg font-semibold mb-2 flex items-center">
+                 ✈️ <a href="http://travelpackhub.onrender.com" class="text-blue-500 underline ml-2">travelpackhub.onrender.com</a>(無料プランのため読み込みが遅いです)
+               </h4>
+               <p class="text-sm text-gray-700 mb-4">
+                 <strong>使用技術:</strong>
+                 <br>フロントエンド: HTML/CSS/JavaScript(デザインはBootstrap)
+                 <br>バックエンド: Node.js(スクレイピングはpuppeteer)
+                 <br>データベース: MySQL
+                 <br>インフラ: Docker
+                 <br>デプロイ: Heroku
+                 <br>レポジトリ: <a href="https://github.com/KazumaWada/TravelPackHub" class="text-blue-500 underline">GitHub</a>
+               </p>
+               <p class="text-sm text-gray-700 mb-4">
+                 <strong>技術記事:</strong>
+                 <a href="https://zenn.dev/kazumawada/articles/f22d5a3b7ad42d" class="text-blue-500 underline">TravelPackHub.comをリリースしました。</a>
+               </p>
+               <p class="text-sm text-gray-700">
+                 このアプリは、note.comで「海外 持ち物」の検索結果の各記事内からAmazonのアフェリエイトリンクを抽出し、自分のアフェリエイトIDに変えてリスト化したアプリです。結果、61円稼げましたが、コードが複雑でメンテナンスしたくないため、放置しています。
+               </p>
+            </div>
+
+              <!-- ThisJobDoesNotExistYet Card -->
+           <div class="bg-white shadow-md rounded-lg p-6">
+               <h4 class="text-lg font-semibold mb-2 flex items-center">
+                 🤖 <a href="http://thisjobdoesnotexistyet.onrender.com" class="text-blue-500 underline ml-2">thisjobdoesnotexistyet.onreder.com</a>(無料プランのため読み込みが遅いです)
+               </h4>
+               <p class="text-sm text-gray-700">
+                 生成AIで画像を生成して遊んでいるときに、思いつきで作ったアプリです。「未来の仕事図鑑」というテーマで、興味で作ってみましたが、途中で熱量が入らず放置しています。
+               </p>
+             </div>
+       </div><!--ポートフォリオカード-->
+    </section>
+    </main>
+
+  <main class="container mx-auto px-4 py-8" id="profile">
     <section class="mb-8">
-      <h2 class="text-2xl font-semibold mb-4">🔗リンク</h2>
+      <h2 class="text-2xl font-semibold mb-4">🧍🏻‍♂️プロフィール</h2>
       <div class="space-y-2">
+        <p>和田 一真(ワダ カズマ) / 26歳</p>
         <p>GitHub: <a href="https://github.com/kazumawada" class="text-blue-600 hover:underline">github.com/kazumawada</a><br></p>
-        <p>ポートフォリオ: <a href="https://kazumawada.com" class="text-blue-600 hover:underline">kazumawada.com</a></p>
+        <p>Zenn: <a href="https://zenn.dev/kazumawada" class="text-blue-600 hover:underline">zenn.dev/kazumawada</a></p>
+            
+
+
+        <br><p>2020年大学卒業<br>↓<br>海外で3年間様々なアルバイト(建設業、バイクメッセンジャー、ホテル、ラーメン屋、寿司屋、ホステルのナイトパトロールなど)<br>↓<br>現在帰国し、Webエンジニアの職探し中です。</p>
+       
       </div>
     </section>
+  </main>
 
+  <main class="container mx-auto px-4 py-8" id="oversea">
     <section class="mb-8">
-      <h2 class="text-2xl font-semibold mb-4">🎬 はじめに</h2>
-      <p class="leading-relaxed">現在26歳で、ソフトウェアエンジニアの就職活動を行っています。日本の大学卒業後、就職せずにワーキングホリデーという制度を使って海外に3年間住んでいました。その期間にプログラミングを独学で学習し、アプリを3つ作りました。これらについて具体的に書いていこうと思います。</p>
+      <h2 class="text-2xl font-semibold mb-4">✈️なぜ海外に3年住んでいたのか</h2>
+      <p class="leading-relaxed">
+        大学のある授業がきっかけで「英語が話せるようになりたい」と思い、その後動画コンテンツなどを使用して独学で英語を学習していました。その動画の中で出てくる海外の景色を見て「実際に見てみたい、暮らしてみたい」と思うようになりました。
+        就職の時期でしたが、後から「あの時行っとけば良かった」と後悔したくなかったので、行くことにしました。当初は1年を予定していましたが、気づいたら3年間暮らしていました。  
+      </p>
     </section>
+  </main>
 
-    <section class="mb-8">
-      <h2 class="text-2xl font-semibold mb-4">🚪 海外生活のきっかけ</h2>
-      <p class="leading-relaxed">英語授業、海外憧れ、後悔したくないから新卒捨てて行った。でもそれだけだと帰ってきたときに何かないとだから、間を塗ってコードを書くことにしました。
-
-        大学生の時に受けた英語のスピーキングの授業がきっかけでした。
-        
-        そのクラスに行くと、僕以外、海外からの留学生とネイティブの先生に囲まれて授業を受けることになりました。
-        
-        僕は英語が全く話せなかったので授業についていけませんでしたが、周りの学生を見て「英語を話せるってかっこいい」と思うようになりました。
-        
-        それから大学にいる間は、英語を動画コンテンツ等(YouTube, Netflix)を使い、独学で学習していました。大学で無料で開かれている英会話教室にも参加していました。
-        
-        海外の動画を見ていると、街並みや景色が日本には無いものがあり、動画コンテンツの学習を通して、今度は海外への興味が湧いてきました。
-        
-        すでに大学4年生で周りが就活をし始めましたが、「若いうちに行っとかないと機会がなくなるかもしれない」と思い、ワーキングホリデービザを使って行くことにしました。</p>
-    </section>
-
-    <section class="mb-8">
-      <h2 class="text-2xl font-semibold mb-4">🌏 3年間の海外生活</h2>
-      <p class="leading-relaxed">大学生の時に英語を独学で学習した甲斐もあり、一人で全てvisaや銀行、仕事探し、家探しなどができ、3年間生活をすることができました。当初は1年で帰る予定でしたが、「せっかくだからもっと色んな国に行ってみよう」思い、気づいたら3年間海外で生活をしていました。
-
-        3年同じ年代の人と仕事の面で遅れが出てしまいましたが、「あの頃に海外へ行っとけばよかった」と自分が将来後悔しないためにとった行動なので僕自身は満足しています。
-        
-        もしお時間があれば、3年間具体的に何をやってきたかを詳しくまとめてあるので読んでいただけたら嬉しいです <a class="text-blue-600" href="https://note.com/imnotkatsuma">note.com</a></p>
-    </section>
-
-    <section class="mb-8">
-    <h2 class="text-2xl font-semibold mb-4">🧑‍💻 プログラミング学習</h2>
+  <main class="container mx-auto px-4 py-8" id="how-i-learn-code">
+     <section class="mb-8">
+    <h2 class="text-2xl font-semibold mb-4">📖これまでどんな学習をしてきたか</h2>
       
       <h3 class="text-xl font-medium mt-4 mb-2">Recursionでプログラミング学習</h3>
-      <p class="leading-relaxed">海外でアルバイトの空き時間に<a class="text-blue-600" href="https://recursionist.io">Recursion</a>というサイトを使い、学習を少しずつ続けていました。        
+      <p class="leading-relaxed">海外でアルバイトの空き時間に<a class="text-blue-600" href="https://recursionist.io">Recursion</a>という月額80ドルで学習できるサイトを使い、学習を少しずつ続けていました。        
         
         以下がRecursion内で作ったアプリケーションです。<br>
+
+        https://github.com/KazumaWada/fileDirectorySystem<br>
         
-        https://github.com/KazumaWada/text_snippet_sharing
+        https://github.com/KazumaWada/text_snippet_sharing<br>
         
-        https://github.com/KazumaWada/online-image-hosting-service
+        https://github.com/KazumaWada/markdown_to_html_converter<br>
         
-        https://github.com/KazumaWada/online_chat_messanger
-        
-        https://github.com/KazumaWada/markdown_to_html_converter
-        
-        https://github.com/KazumaWada/file_converter
-        
-        https://github.com/KazumaWada/guess_the_number_game
-        
-        https://github.com/KazumaWada/remote-procedure-call
-        
-        https://github.com/KazumaWada/BTools
-        
-        https://github.com/KazumaWada/libraryApplication
+        https://github.com/KazumaWada/BTools<br>
         
         https://github.com/KazumaWada/clickerEmpierGame</p>
 
         <h3 class="text-xl font-medium mt-4 mb-2">自分で一からアプリを3つ作ってリリースしました。</h3>
 
         <p class="leading-relaxed mb-4">
-            Recursionでアプリを作ってきましたが、正直に言うとチュートリアルに沿ってやっていたので、完全に理解せずとも何故か作れてしまうという状態でした。そこで、今度はチュートリアルを卒業して自分で作ってみようと思い、3つアプリ作りました。
+            Recursionでアプリを作ってきましたが、正直に言うとチュートリアルに沿ってやっていたので、完全に理解せずとも何故か作れてしまうという状態でした。そこで、今度はチュートリアルを卒業して自分で作ってみようと思い、3つアプリを作りました。
           </p>
           <p class="leading-relaxed mb-4">
             自分で作ると全て自分で構成を決めて書いていくので、理解度が格段に上がりました。この頃にCursorを使い始めたので、それにも助けてもらいました。
           </p>
-        
-          <!-- <div class="mb-8">
-            <h4 class="text-lg font-semibold mb-2">✈️ <a href="http://travelpackhub.com" class="text-blue-500 underline">travelpackhub.com</a></h4>
-            <p class="leading-relaxed mb-4">
-              <strong>使用技術:</strong>
-              <br>フロントエンド: HTML/CSS/JavaScript(デザインはBootstrap)
-              <br>バックエンド: Node.js(スクレイピングはpuppeteer)
-              <br>データベース: MySQL
-              <br>インフラ: Docker
-              <br>デプロイに使用したソフトウェア: Heroku
-              <br>レポジトリ: <a href="https://github.com/KazumaWada/TravelPackHub" class="text-blue-500 underline">GitHub</a>
-            </p>
-            <p class="leading-relaxed mb-4">
-              <strong>技術記事:</strong> <a href="https://zenn.dev/kazumawada/articles/f22d5a3b7ad42d" class="text-blue-500 underline">TravelPackHub.comをリリースしました。</a>
-            </p>
-            
-            <p class="leading-relaxed mb-4">
-              このアプリは、note.comで「海外 持ち物」の検索結果の各記事内からAmazonのアフェリエイトリンクを抽出し、自分のアフェリエイトIDに変えて、それを全てリスト化したアプリです。結果、61円稼げましたが、コードが複雑でメンテナンスしたくないので、このまま放置しておきます。
-            </p>
-          </div>
-        
-          <div class="mb-8">
-            <h4 class="text-lg font-semibold mb-2">🤖 <a href="http://thisjobdoesnotexistyet.com" class="text-blue-500 underline">thisjobdoesnotexistyet.com</a></h4>
-            <p class="leading-relaxed mb-4">
-              生成AIで画像を生成して遊んでいるときに、思いつきで作ったアプリです。「未来の仕事図鑑」というテーマで、興味で作ってみましたが、途中で熱量が入らず放置しています。
-            </p>
-          </div>
-        
-          <div class="mb-8">
-            <h4 class="text-lg font-semibold mb-2">✏️ <a href="http://eigopencil.com" class="text-blue-500 underline">eigopencil.com</a></h4>
-            <p class="leading-relaxed mb-4">
-              <strong>使用技術:</strong>
-              <br>フロントエンド: HTML/CSS/Tailwind CSS
-              <br>バックエンド: Ruby on Rails
-              <br>データベース: PostgreSQL
-              <br>インフラ: Docker
-              <br>デプロイに使用したソフトウェア: Render
-              <br>レポジトリ: <a href="https://github.com/KazumaWada/eigopencil" class="text-blue-500 underline">GitHub</a>
-            </p>
-            <p class="leading-relaxed mb-4">
-              <strong>技術記事:</strong> <a href="https://zenn.dev/kazumawada/articles/3ffb67eb690290" class="text-blue-500 underline">英語学習サイト ✏️eigopencil.com をリリースしました。</a>
-            </p>
-            <p class="leading-relaxed mb-4">
-              前回の反省を踏まえ、今度は自分が使い続けたいアプリにすれば継続的にメンテナンスやアップデートができ、時間の経過と共にユーザーにも認知してもらえるかもしれないと思い、英語学習サイトeigopencil.comを作りました。英語を書いてアウトプットする環境を提供するアプリで、帰国後の英語力維持を目的に開発しました。他のユーザーもサインアップして利用できます。
-            </p>
-          </div>
-        </div>
-         -->
-
-         <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-            <!-- TravelPackHub Card -->
-            <div class="bg-white shadow-md rounded-lg p-6">
-              <h4 class="text-lg font-semibold mb-2 flex items-center">
-                ✈️ <a href="http://travelpackhub.com" class="text-blue-500 underline ml-2">travelpackhub.com</a>
-              </h4>
-              <p class="text-sm text-gray-700 mb-4">
-                <strong>使用技術:</strong>
-                <br>フロントエンド: HTML/CSS/JavaScript(デザインはBootstrap)
-                <br>バックエンド: Node.js(スクレイピングはpuppeteer)
-                <br>データベース: MySQL
-                <br>インフラ: Docker
-                <br>デプロイ: Heroku
-                <br>レポジトリ: <a href="https://github.com/KazumaWada/TravelPackHub" class="text-blue-500 underline">GitHub</a>
-              </p>
-              <p class="text-sm text-gray-700 mb-4">
-                <strong>技術記事:</strong>
-                <a href="https://zenn.dev/kazumawada/articles/f22d5a3b7ad42d" class="text-blue-500 underline">TravelPackHub.comをリリースしました。</a>
-              </p>
-              <p class="text-sm text-gray-700">
-                このアプリは、note.comで「海外 持ち物」の検索結果の各記事内からAmazonのアフェリエイトリンクを抽出し、自分のアフェリエイトIDに変えてリスト化したアプリです。結果、61円稼げましたが、コードが複雑でメンテナンスしたくないため、放置しています。
-              </p>
-            </div>
-          
-            <!-- ThisJobDoesNotExistYet Card -->
-            <div class="bg-white shadow-md rounded-lg p-6">
-              <h4 class="text-lg font-semibold mb-2 flex items-center">
-                🤖 <a href="http://thisjobdoesnotexistyet.com" class="text-blue-500 underline ml-2">thisjobdoesnotexistyet.com</a>
-              </h4>
-              <p class="text-sm text-gray-700">
-                生成AIで画像を生成して遊んでいるときに、思いつきで作ったアプリです。「未来の仕事図鑑」というテーマで、興味で作ってみましたが、途中で熱量が入らず放置しています。
-              </p>
-            </div>
-          
-            <!-- EigoPencil Card -->
-            <div class="bg-white shadow-md rounded-lg p-6">
-              <h4 class="text-lg font-semibold mb-2 flex items-center">
-                ✏️ <a href="http://eigopencil.com" class="text-blue-500 underline ml-2">eigopencil.com</a>
-              </h4>
-              <p class="text-sm text-gray-700 mb-4">
-                <strong>使用技術:</strong>
-                <br>フロントエンド: HTML/CSS/Tailwind CSS
-                <br>バックエンド: Ruby on Rails
-                <br>データベース: PostgreSQL
-                <br>インフラ: Docker
-                <br>デプロイ: Render
-                <br>レポジトリ: <a href="https://github.com/KazumaWada/eigopencil" class="text-blue-500 underline">GitHub</a>
-              </p>
-              <p class="text-sm text-gray-700 mb-4">
-                <strong>技術記事:</strong>
-                <a href="https://zenn.dev/kazumawada/articles/3ffb67eb690290" class="text-blue-500 underline">英語学習サイト ✏️eigopencil.com をリリースしました。</a>
-              </p>
-              <p class="text-sm text-gray-700">
-                前回の反省を踏まえ、継続的にメンテナンスやアップデートが可能な英語学習サイトを開発しました。英語を書いてアウトプットする環境を提供するアプリで、帰国後の英語力維持を目的にしています。他のユーザーもサインアップして利用できます。
-              </p>
-            </div>
-          </div>
-          
-
-
     </section>
-
+  </main>
+   
+  <main class="container mx-auto px-4 py-8" id="plz">
     <section class="mb-8">
-      <h2 class="text-2xl font-semibold mb-4">🗺️ webエンジニアとして働きたいです。</h2>
-      <p class="leading-relaxed">3つのアプリのリリースを通して、サービスとは「自分が作りたいもの」ではなく、「自分が解決したい課題」と「ユーザー体験」を擦り合わせていくものだと実感しました。
+      <h2 class="text-2xl font-semibold mb-4">🙇‍♂️Webエンジニアとして働きたいです。</h2>
+      <p class="leading-relaxed"><a class="text-blue-600" href="#app-i-build">3つのアプリのリリース</a>を通して、<strong>サービスとは「自分が作りたいもの」ではなく、「自分が解決したい課題」と「ユーザーが抱えている課題」を擦り合わせていくものだと実感しました。</strong>
 
-        これまでいくつかのサービスを開発してきた中で、ユーザーのニーズを深く理解しないまま形にしたプロダクトは、運用や改善のモチベーションが続かないことを経験しました。(travelpackhub.com, thisjobdoesnotexistyet.comがその例です。)一方で、自分や他のユーザーが抱える課題に真摯に向き合い、その解決に取り組んだサービスでは、開発や運用を続ける楽しさを感じることができました。(eigopencil.com)<br><br>
+        これまでいくつかのサービスを開発してきた中で、ユーザーのニーズを深く理解しないまま形にしたプロダクトは、運用や改善のモチベーションが続かないことを経験しました。(travelpackhub.onrender.com, thisjobdoesnotexistyet.onrender.comがその例です。)一方で、自分や他のユーザーが抱える課題に真摯に向き合い、その解決に取り組んだサービスでは、開発や運用を続ける楽しさを感じることができました。(eigopencil.com)<br><br>
         
         「ユーザーの課題を解決したい」という気持ちは、個人での開発でも会社でのプロダクト開発でも共通していると考えています。私は、これまで3年間、独学でプログラミングを続けてきた継続力と、サービスをリリースするまで粘り強く努力できる忍耐力があります。
         
         これらの強みを活かし、チームで協力しながら価値あるプロダクトを作り上げ、ユーザーにの課題を解決するエンジニアになりたいと考えています。</p>
     </section>
+  </main>
 
+  <main class="container mx-auto px-4 py-8" id="lastly">
     <section class="mb-8">
       <h2 class="text-2xl font-semibold mb-4">💬 終わりに</h2>
       <p class="leading-relaxed">最後まで読んでいただきありがとうございます。ぜひ気軽にご連絡下さい。</p>
