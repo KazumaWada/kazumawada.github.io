@@ -1,0 +1,659 @@
+<!-- touch [fileOrDirName]: 
+// 指定した名前のファイルをカレントディレクトリに作成します。ファイルまたはディレクトリが既に存在する場合は、ノードのdateModified値を現在の日付に更新します。
+mkDir [dirName]: 
+// 与えられた名前でカレントディレクトリに新しいディレクトリを作成します。
+ls [?fileOrDirName]: 
+// ターゲットノードがディレクトリの場合、ターゲットディレクトリノードの直下の全てのファイルリストを出力します。ターゲットノードがファイルの場合、与えられたノードのみ出力します。引数が存在しない場合、カレントディレクトリの全てのファイルリストを出力します。
+cd [..| dirName]: 
+// 現在の作業ディレクトリを指定されたものに変更します。引数が'..'の場合はカレントディレクトリを親ディレクトリに、そうでない場合はカレントディレクトリをカレントディレクトリ内のdirNameに変更します。
+pwd []: 
+// 現在の作業ディレクトリのパスを出力します。
+print [fileName]: 
+// カレントディレクトリ内の指定されたfileNameの.content値（ファイルの情報）を表示します。
+setContent [fileName]: 
+// 与えられたfileNameの.content値をカレントディレクトリに設定します。
+rm [fileOrDirName]: 
+// 指定したfileOrDirNameのファイルまたはディレクトリをカレントディレクトリから削除します。 
+
+//第2フェーズ
+https://recursionist.io/dashboard/course/20/lesson/519
+
+- 一回のコマンド入力で、ファイルシステム内をどこでも行けるようにする
+% file,dir "/"では時ある場合 -> pathは必ずrootから。(絶対path)
+% file,dir dir名/dir名 ->currentDirから(相対path)
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+-->
+
+
+
+<!doctype html>
+<html lang="en">
+  <head>
+    <!-- Required meta tags -->
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+
+    <!-- Bootstrap CSS -->
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.0/css/bootstrap.min.css" integrity="sha384-9aIt2nRpC12Uk9gS9baDl411NQApFmC26EwAOH8WgZl5MYYxFfc+NcPb1dKGj7Sk" crossorigin="anonymous">
+
+    <title>Command Line Interface</title>
+
+    <style>
+        .vh-60 {
+            height: 60vh;
+        }
+
+        h1,h2,h3,h4,h5,h6,p {
+            margin: 0;
+            color:white;
+        }
+
+        .bg-header {
+            background: #2A69AE;
+        }
+
+        .bg-result {
+            background: #32363D;
+        }
+        #CLIOutputDiv
+        {
+            overflow: scroll;
+        }
+            </style>
+
+  </head>
+  <body>
+    <div class="bg-success vh-100 d-flex flex-column justify-content-center">
+        <div class="container col-8 px-0 bg-result">
+            <div class="text-center bg-header py-2">
+                <h1>File System</h1>
+                <h6> (Queries can take a couple seconds) </h6>
+            </div>
+    
+            <div id="CLIOutputDiv" class="container vh-60 bg-dark p-3 text-white">
+            </div>
+    
+    
+            <div class="container input-group py-2">
+                <input type="text" id ="CLITextInput" class="form-control" placeholder="type any command" aria-label="Username" aria-describedby="addon-wrapping">
+            </div>
+        </div>
+    </div>
+    </body>
+</html><!-- CLI Book Lookup Console version -->
+
+<script>
+//ユーザーのinputのid
+let CLITextInput = document.getElementById("CLITextInput");
+let CLIOutputDiv = document.getElementById("CLIOutputDiv");
+
+class File {
+  constructor(fileName) {
+    this.fileName = fileName;
+    //this.name = name;
+    this.content = "";
+  }
+}
+
+class Directory {
+  constructor(name) {
+    this.name = name;
+    //ls,rmとか現在のdirの子供のみを取り扱うので、配列で表した方がいい。
+    this.children = [];
+    //ここに.nextを定義すると、同じ階層にdirが作られてもそれが.nextとなってしまうから。
+    //じゃあ、どこに.nextを配置するのが良いのか?
+    //そもそもどのコマンド入力で.nextになるのが望ましいのか?
+  }
+
+  addChild(node) {
+    //thisは、Directory.addChild(node)
+    //つまり、currentNode.addChild(node)
+    //this == currentNode
+    //これで全て以下のコードが分かる
+
+    this.children.push(node);
+    //parent
+    node.parent = this;
+    //子
+    this.next = node;
+  }
+  //特定の子供
+  getChild(name) {
+    return this.children.find((child) => child.name === name);
+  }
+  //rm用に指定された特定のfileのみを取得
+  getChildFile(fileName){
+    return this.children.find((child) => child.fileName === fileName);
+  }
+  //子供全部
+  getChildren() {
+    return this.children;
+  }
+}
+
+let rootDirectory = new Directory("root");
+//currentは動いてしまうし、newすると、作ってしまうから。
+//let rootDirectoryPointer = rootDirectory;
+let currentDirectory = rootDirectory;
+//cdで変わるので、グローバルにしておく。
+let initialDir = "~";
+//event ユーザーが何かしらタイプし始めたら、
+CLITextInput.addEventListener("keyup", (event) => submitSearch(event));
+
+function submitSearch(event) {
+  if (event.key == "Enter") {
+    let errorMessage = "invalid request";
+    //空欄だったら
+    // if (CLITextInput.value == "") {
+    //   let message = errorMessage;
+    //   return appendInputValue(CLIOutputDiv, CLITextInput.value, message);
+    // }
+
+    //ユーザーのinputを空白ごとに配列の要素にする
+    //グローバルスコープに書いてしまうと、初期状態(つまり空欄)が維持されて
+    //ユーザーが入力したとしても常に空欄を返してしまう。
+    let CLIInputArr = CLITextInput.value.trim().split(" ");
+    
+    if (CLIInputArr[0] == "touch") {
+      let message = "created file " + CLIInputArr[1];
+      appendInputValue(CLIOutputDiv, CLITextInput.value, message);
+      //ファイルを作成
+      let file = new File(CLIInputArr[1]);
+      currentDirectory.addChild(file);
+      CLITextInput.value = "";
+    } 
+
+    //mkdir
+    else if (CLIInputArr[0] == "mkdir") {
+      let message = "created dir '" + CLIInputArr[1] + "'";
+      appendInputValue(CLIOutputDiv, CLITextInput.value, message);
+      //ディレクトリを作成
+      let directory = new Directory(CLIInputArr[1]);
+      //生成された[]に[1]のファイル名.pushする
+      //つまりdirは配列で管理されている。
+      currentDirectory.addChild(directory);
+      CLITextInput.value = "";
+    }
+
+    //pwd
+    //このコマンドはcurrentDirectoryを変えてはいけない。
+    //ただroot->currentDirectoryまでのpathを表示するだけだから。
+   else if(CLIInputArr[0] == "pwd"){
+    let message = ``;
+
+    //現在のdirがrootだったら、
+    if(currentDirectory.name == "root"){
+      message ="root/";
+    }
+    //currentDirectoryがroot以外のdirだったら、
+    else{
+      let tempCurrentDirectory = rootDirectory;
+      while(tempCurrentDirectory != currentDirectory){
+        message += tempCurrentDirectory.name + "/";
+        tempCurrentDirectory = tempCurrentDirectory.next;
+      }
+    }
+    //足りなかったからここでひとつ足している。
+      message += currentDirectory.name;
+    appendInputValue(CLIOutputDiv, CLITextInput.value, message);
+    CLITextInput.value = "";
+  }
+
+    //ls
+    else if (CLIInputArr[0] == "ls") {
+      let message = "";
+      
+      //ls Absolute//
+      //lsの場合は、[1]無しで入力してくることがあるから。
+      if(CLIInputArr[1] && CLIInputArr[1][0] === "/"){
+        console.log("Absolute");
+        let target = rootDirectory;
+        let APathArr = CLIInputArr[1].trim().split("/");      
+      //最後のdirまで辿る
+      for(let i=0; i<APathArr.length-1; i++){
+      //[0]はただの空欄だから。
+      if(i == 0)continue;
+      //rootからのpathと,ユーザーのpathが同じだったら
+      else if(target.name == APathArr[i]){
+        target = target.next;    
+       }
+      else if(target.name != APathArr[i]){
+        message = "this path doesnt exist brah";
+        //break;
+      }   
+      }
+
+      let children = target.getChildren();
+      //loop後
+      if(message == ""){
+        children.forEach((child) => {
+          if (child instanceof File) {
+            message += target.fileName + ", ";
+          } else if (child instanceof Directory) {
+            message += child.name + ", ";
+          }
+          
+        });    
+      }
+
+      }
+      //ls Absolute//
+
+      //ls Relative//
+      else if(CLIInputArr[1] && CLIInputArr[1].indexOf("/") !== -1){
+        console.log("Relative");
+        let message = "";
+        let target = currentDirectory;
+        let RPathArr = CLIInputArr[1].trim().split("/"); 
+
+      for(let i=0; i<RPathArr.length-1; i++){
+      //[0]はただの空欄だから。
+      if(i == 0)continue;
+      //rootからのpathと,ユーザーのpathが同じだったら
+      else if(target.name == RPathArr[i]){
+        target = target.next;    
+       }
+      else if(target.name != RPathArr[i]){
+        message = "this path doesnt exist brah";
+        //break;
+      }   
+      }
+
+      let children = target.getChildren();
+      //loop後
+      if(message == ""){
+        children.forEach((child) => {
+          if (child instanceof File) {
+            message += target.fileName + ", ";
+          } else if (child instanceof Directory) {
+            message += child.name + ", ";
+          }
+          
+        });    
+      }
+
+      }
+      //ls Relative//
+
+      //dir指定がないls
+      else {
+        children = currentDirectory.getChildren();
+        children.forEach((child) => {
+          if (child instanceof File) {
+            message += child.fileName + ", ";
+          } else if (child instanceof Directory) {
+            message += child.name + ", ";
+          }
+        });
+      }
+
+      appendInputValue(CLIOutputDiv, CLITextInput.value, message);
+      CLITextInput.value = "";
+    } 
+
+  //rm
+  //同じ名前のfileが複数あった場合はまだ考えていない。(dirも)
+  //↑今の所、indexOfだから0に近いindexが当てはまる。
+  //このコマンドは通常、fileのみを削除する事ができる。
+  //特定のNodeを削除する場合、双方向で実現する
+  //https://recursionist.io/dashboard/course/3/lesson/406
+  else if (CLIInputArr[0] == "rm") {
+    let message = "";
+    
+    let targetFile = currentDirectory.getChildFile(CLIInputArr[1]);
+    let targetDir = currentDirectory.getChild(CLIInputArr[1]);
+    let target = rootDirectory;
+
+    //rm Absolute Path//
+    if(CLIInputArr[1][0] == "/"){
+      //配列を作って、
+      let APathArr = CLIInputArr[1].trim().split("/");
+      //最後まで辿っていく
+      for(let i=0; i<APathArr.length-1; i++){
+      //[0]はただの空欄だから。
+      if(i == 0)continue;
+      //rootからのpathと,ユーザーのpathが同じだったら
+      else if(target.name == APathArr[i]){
+        target = target.next;    
+       }
+      else if(target.name != APathArr[i]){
+        message = "this path doesnt exist brah";
+        //break;
+      }   
+      }
+
+      //ループ後最後の要素が、fileかdirか判定
+      //同じ名前でfile,dirが存在する場合があるから
+      if(message == ""){
+      targetFile = currentDirectory.getChildFile(target.name);
+      targetDir = currentDirectory.getChild(target.name);
+      //ループの最後の要素のnodeをdirかfileか確かめて、
+      //
+      let rmTarget = target instanceof File ? targetFile : targetDir;
+      //rmTargetの
+      }
+    }
+    //rm Absolute Path//
+
+    else if(targetFile){
+    //currentDirectory.childrenのindexを取得
+    let targetIndex = currentDirectory.children.indexOf(targetFile);
+    //配列から削除
+    currentDirectory.children.splice(targetIndex,1);
+    message = `removed ${CLIInputArr[1]} !`;
+    }
+    else if(targetDir){
+    //currentDirectory.childrenのindexを取得
+    let targetIndex = currentDirectory.children.indexOf(targetDir);
+    //配列から削除
+    currentDirectory.children.splice(targetIndex,1);
+    message = `removed ${CLIInputArr[1]} !`;
+    }
+    else{
+      message = `that dir/file doesnt exist`;
+    }
+
+    appendInputValue(CLIOutputDiv, CLITextInput.value, message);
+    CLITextInput.value = "";
+  }
+
+  //cd ..
+  else if(CLIInputArr[0] == "cd" && CLIInputArr[1] == ".."){
+    currentDirectory = currentDirectory.parent;
+    initialDir = currentDirectory.name;
+    let message = `directory is now ${currentDirectory.name}`;
+    appendInputValue(CLIOutputDiv, CLITextInput.value, message);
+    //空にする
+    CLITextInput.value = "";
+  }
+
+  //cd
+  else if (CLIInputArr[0] == "cd") {
+  let message = "";
+  //Absolute path//
+  if(CLIInputArr[1][0] == "/"){
+    let target = rootDirectory;
+    //これをやると、["","root",,,]になる
+    let APathArr = CLIInputArr[1].trim().split("/");
+    for(let i=0; i<APathArr.length-1; i++){
+      //[0]はただの空欄だから。
+      if(APathArr[i] == "")continue;
+      //rootからのpathと,ユーザーのpathが同じだったら
+      else if(target.name == APathArr[i]){
+        target = target.next;    
+      }
+      else if(target.name != APathArr[i]){
+        message = "this path doesnt exist brah";
+        //break;
+      } 
+        
+    }
+
+    //errorが無かったら、
+    console.log("ループ後のtarget.name" + target.name);
+    if(message != "this path doesnt exist brah"){
+      initialDir = APathArr[APathArr.length-1];
+      currentDirectory = target;
+      message = `directory is now ${APathArr[APathArr.length-1]}`;
+      
+      
+    }
+    
+    appendInputValue(CLIOutputDiv, CLITextInput.value, message);
+    CLITextInput.value = "";
+  }
+  //Absolute path//
+
+  //Relative Path//
+  else if(CLIInputArr[1].indexOf("/") !== -1){
+    let target = currentDirectory;
+    //"a/b/c"->[a,b,c]
+    let RPathArr = CLIInputArr[1].trim().split("/");
+    //最初のがcurrentDirectoryと等しかったら
+    if(currentDirectory.name == CLIInputArr[1][0]){
+      //ループ//
+      for(let i=0; i<RPathArr.length-1; i++){
+      //rootからのpathと,ユーザーのpathが同じだったら
+      if(target.name == RPathArr[i]){
+        console.log("target.name" + target.name + "==" + "APathArr[i]" + RPathArr[i]);
+        target = target.next;    
+      }
+      else if(target.name != RPathArr[i]){
+        message = "this path doesnt exist brah";
+        //break;
+      } 
+      //ループ終了//
+    }
+  }
+  if(message == ""){
+      // console.log("currentDirectory" + currentDirectory);
+      // console.log("target" + target);
+      //文字列のみ成功。nodeは異なっている。
+      initialDir = RPathArr[RPathArr.length-1];
+      currentDirectory = target;
+      message = `directory is now ${RPathArr[RPathArr.length-1]}`; 
+    }
+    appendInputValue(CLIOutputDiv, CLITextInput.value, message);
+    CLITextInput.value = "";
+  }
+  //Relative Path//
+
+  //dir一つのみ
+  else if(currentDirectory.getChild(CLIInputArr[1])){
+    console.log("if");
+    let target = currentDirectory.getChild(CLIInputArr[1]);
+    currentDirectory = target;
+    //dir名 % 空欄
+    initialDir = target.name;
+    message = `Changed directory to ${target.name}`;
+    appendInputValue(CLIOutputDiv, CLITextInput.value, message);
+    CLITextInput.value = "";
+   
+   }
+  //ユーザーがcdで遡ろうとした時。
+  //前回のcurrentNodeと[1]が違う時。
+  else if(!currentDirectory.getChild(CLIInputArr[1])){
+    console.log("else if");   
+      message = `no such file or directory: ${CLIInputArr[1]}`
+      appendInputValue(CLIOutputDiv, CLITextInput.value, message);
+      CLITextInput.value = "";
+    }  
+  }
+
+  else if (CLIInputArr[0] == "setContent") {
+  let message = "";
+  //"setContent file名 content"にしたらenterの必要ないね
+  let targetFile = currentDirectory.getChildFile(CLIInputArr[1]);
+  let target = rootDirectory;
+  let APathArr = CLIInputArr[1].trim().split("/");
+  //Absolute//
+  if(CLIInputArr[1][0] == "/"){
+    
+    //最後はfile名だから、その一個前だから-2
+    for(let i=0; i<APathArr.length-2; i++){
+      //[0]はただの空欄だから。
+      if(i == 0)continue;
+      //rootからのpathと,ユーザーのpathが同じだったら
+      else if(target.name == APathArr[i]){
+        target = target.next;    
+       }
+      else if(target.name != APathArr[i]){
+        message = "this path doesnt exist brah";
+      }   
+      }
+
+  if(message == ""){
+    //fileタイプのNode
+    targetFile = target.getChildFile(APathArr[APathArr.length-1]);
+    targetFile.content = CLIInputArr[2]; 
+    message = `${APathArr[APathArr.length-1]}'s content saved. content: ${targetFile.content}`;
+  }
+  }
+  //Absolute//
+
+  //Relative//
+  else if(CLIInputArr[1].indexOf("/") != -1){
+    target = currentDirectory;
+    let RPathArr = CLIInputArr[1].trim().split("/");
+    console.log(RPathArr);
+    //fileではなく、直前のdirから探すから、-2
+    for(let i=0; i<RPathArr.length-2; i++){
+      //[0]はただの空欄だから。relativeの場合はどうなん?
+      //if(i == 0)continue;
+      //rootからのpathと,ユーザーのpathが同じだったら
+      if(target.name == RPathArr[i]){
+        target = target.next;    
+       }
+      else if(target.name != RPathArr[i]){
+        message = "this path doesnt exist brah";
+      }   
+      }
+      console.log("target of relative setContent" + target.name);
+      console.log(message);
+    if(message == ""){
+    targetFile = target.getChildFile(RPathArr[RPathArr.length-1]);
+    targetFile.content = CLIInputArr[2]; 
+    message = `${RPathArr[RPathArr.length-1]}'s content saved. content: ${targetFile.content}`;
+    }
+  }
+  //Relative//
+
+  // もしファイル名が存在したら、
+  else if (targetFile && CLIInputArr[2] !== undefined) {
+    targetFile.content = CLIInputArr[2]; 
+    message = `${targetFile.fileName}'s content saved. content: ${targetFile.content}`;
+  }
+  
+  else {
+    message = `file doesnt exist or you just wrote nothing lol`;
+  }
+  appendInputValue(CLIOutputDiv, CLITextInput.value, message);
+  CLITextInput.value = "";
+}
+
+else if (CLIInputArr[0] == "print") {
+  let message = "";
+  let targetFile = currentDirectory.getChildFile(CLIInputArr[1]);
+  let target = rootDirectory;
+  
+
+
+  //Absolute
+  if(CLIInputArr[1][0] == "/"){
+  let APathArr = CLIInputArr[1].trim().split("/");
+
+  //最後はfile名だから、その一個前だから-2
+  for(let i=0; i<APathArr.length-2; i++){
+      //[0]はただの空欄だから。
+      if(i == 0)continue;
+      //rootからのpathと,ユーザーのpathが同じだったら
+      else if(target.name == APathArr[i]){
+        target = target.next;    
+       }
+      else if(target.name != APathArr[i]){
+        message = "this path doesnt exist brah";
+      }   
+      }
+
+    if(message == ""){
+      //直前のdirに存在しているfile.contentをmessageに挿入
+      targetFile = target.getChildFile(APathArr[APathArr.length-1]);
+      message = targetFile.content;
+      console.log("message" + message);
+      console.log("直前のdir名: " + target.name);
+      console.log("ファイル名: " + targetFile.fileName);
+      console.log("そのファイルの内容: " + targetFile.content);
+    }
+    console.log("message" + message);
+  }
+
+  //Relative path//
+  else if(CLIInputArr[1].indexOf("/") != -1){
+    target = currentDirectory;
+    let RPathArr = CLIInputArr[1].trim().split("/");
+
+    //fileではなく、直前のdirから探すから、-2
+    for(let i=0; i<RPathArr.length-2; i++){
+      console.log("print relative loop")
+      if(target.name == RPathArr[i]){
+        target = target.next;    
+       }
+      else if(target.name != RPathArr[i]){
+        message = "this path doesnt exist brah";
+      }   
+      }
+
+      if(message ==""){
+       targetFile = target.getChildFile(RPathArr[RPathArr.length-1]);
+       message = targetFile.content;
+      }
+  
+  }
+  //Relative path//
+
+  //通常の
+  else if(targetFile && targetFile.content != undefined){
+  message = targetFile.content;
+  }
+
+  else{message ="no content or file dosent exist";}
+
+
+  appendInputValue(CLIOutputDiv, CLITextInput.value, message);
+  CLITextInput.value = "";
+}
+//例外処理
+else{
+      appendInputValue(CLIOutputDiv, errorMessage, "");
+      CLITextInput.value = "";
+  }
+}
+}
+
+//矢印機能
+document.addEventListener("keydown", function(event) {
+  if (event.key === "ArrowUp") {
+    console.log("上矢印が押されました");
+  } else if (event.key === "ArrowDown") {
+    console.log("下矢印が押されました");
+  }
+});
+
+
+
+//appendInputValue(CLIOutputDiv, CLITextInput.value, message);
+function appendInputValue(parent, value, message) {
+  
+  parent.innerHTML +=
+    `<p class="m-0">
+      <span style='color:green'>student</span>
+      <span style='color:magenta'>@</span>
+      <span style='color:blue'>KAZ </span>
+      ${initialDir} % ${value}<br> 
+      ${message}
+    </p>`;
+}
+
+
+
+
+</script>
